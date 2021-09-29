@@ -1,6 +1,8 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:qr_code/process/validate.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:qr_code/container/segmentos/formularios/login/formulario-login.dart';
+import 'package:qr_code/process/dataListas.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Body_login extends StatefulWidget {
   const Body_login({Key? key}) : super(key: key);
@@ -11,98 +13,84 @@ class Body_login extends StatefulWidget {
 
 //BODY APPS
 class _BodyAPPState extends State<Body_login> {
-  String usuario = "";
-  String senha = "";
   String portao = 'Portão 01';
-  String valida = "";
+  String dadosLogin = "";
+  String validarUsuario = "";
 
   @override
   Widget build(BuildContext context) {
     return Form(
       child: Container(
-        width: 300,
-        height: 200,
+        width: double.infinity,
         margin: const EdgeInsets.all(5),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Expanded(
+            Flexible(
+              fit: FlexFit.loose,
               child: Container(
                 alignment: Alignment.topCenter,
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  decoration: InputDecoration(
-                    labelText: "usuario".toUpperCase(),
-                    hintText: "entre com o usuário".toLowerCase(),
-                    border: const OutlineInputBorder(),
-                  ),
-                  onChanged: (text) {
-                    usuario = text;
-                  },
-                ),
+                child: FormularioLogin().inputUsuario(),
               ),
             ),
-            Expanded(
+            Flexible(
+              fit: FlexFit.loose,
               child: Container(
                 alignment: Alignment.topCenter,
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "senha".toUpperCase(),
-                    hintText: "Digite a senha",
-                    border: const OutlineInputBorder(),
-                  ),
-                  onChanged: (text) {
-                    senha = text;
-                  },
-                ),
+                child: FormularioLogin().inputSenha(),
               ),
             ),
-            Expanded(
+            Flexible(
+              fit: FlexFit.loose,
               child: Container(
                 alignment: Alignment.topCenter,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    DropdownButton(
-                      value: portao,
-                      icon: const Icon(Icons.arrow_downward),
-                      iconSize: 24,
-                      elevation: 16,
-                      style: const TextStyle(color: Colors.deepPurple),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.deepPurpleAccent,
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: DropdownButton(
+                        value: portao,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            portao = newValue!;
+                          });
+                        },
+                        items: <String>['Portão 01', 'Portão 02', 'Portão 03']
+                            .map<DropdownMenuItem<String>>(
+                          (String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value.toUpperCase(),
+                              ),
+                            );
+                          },
+                        ).toList(),
                       ),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          portao = newValue!;
-                        });
-                      },
-                      items: <String>['Portão 01', 'Portão 02', 'Portão 03']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                            value: value, child: Text(value));
-                      }).toList(),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // ignore: prefer_typing_uninitialized_variables
-                        var validaRender;
-                        valida = ValidarFormularios()
-                            .validarFormulario(usuario, senha, portao);
-                        validaRender = jsonDecode(valida);
-                        if (validaRender["status"] == "1") {
-                          Navigator.of(context)
-                              .pushReplacementNamed('/mainpage');
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(validaRender["message"].toString()),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text("Logar"),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final stores = await SharedPreferences.getInstance();
+                          var dadosLogin =
+                              "{\"usuario\":\"${stores.getString("users").toString()}\", \"senha\":\"${stores.getString("password").toString()}\",\"gates\":\"${portao.toString()}\"}";
+                          stores.setString("search", dadosLogin);
+                          stores.setString("swit", "logar-webserver");
+                          String validarUsuario =
+                              await GeradorListas().gerarListas();
+                        },
+                        child: Text("Logar".toUpperCase()),
+                      ),
                     ),
                   ],
                 ),

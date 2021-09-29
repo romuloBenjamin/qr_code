@@ -1,40 +1,32 @@
 import 'dart:convert';
-
 import 'package:shared_preferences/shared_preferences.dart';
-import 'SetHttpPostData.dart';
+import 'conect-webserver.dart';
 
 class GeradorListas {
-  late String rawMap;
+  String sendData = "";
   var json = {};
-  var iMap;
 
-  gerarListas(String listas) async {
-    final store = await SharedPreferences.getInstance();
-    String? search = store.getString("search");
-    String? swit = store.getString("swit");
-    String? module = store.getString("module");
-    String? keys = store.getString("keys");
+  gerarListas() async {
+    final stores = await SharedPreferences.getInstance();
+    String? search = stores.getString("search");
+    String? swit = stores.getString("swit");
 
-    /*CONECT TO WEBSERVER*/
-    if (swit == listas) {
-      rawMap = await GetWebServerData(
-        search!,
-        keys!,
-        module!,
-        swit!,
-      );
+    /*SET OBJECTS -> Keys*/
+    json["wsKey"] = "NGqHZa8H39Kr8KHXbxpHQQpQjTxGLN";
+    /*DADOS PARA RESGATE NO WS*/
+    if (search!.isNotEmpty) {
+      json["data"] = search;
+    } else {
+      json["search"] = {};
     }
-    /*CONECT TO WEBSERVER*/
-    if (swit != listas) {
-      rawMap = await GetWebServerData(
-        search!,
-        keys!,
-        module!,
-        listas,
-      );
+    /*CHAVE DE PESQUISA MODULO*/
+    if (swit!.isNotEmpty) {
+      json["swit"] = swit;
+    } else {
+      json["swit"] = "sendToDebug";
     }
-    iMap = jsonDecode(rawMap);
-    return jsonEncode(iMap);
+    sendData = jsonEncode(json);
+    return GeradorListas().conectWS(sendData);
   }
 
   gerarEmptyList() {
@@ -43,8 +35,13 @@ class GeradorListas {
   }
 
   /*GERAR LISTAGEMS*/
-  Future<String> gerarFutureList(String searchData) async {
-    var getHash = await GeradorListas().gerarListas(searchData.toString());
+  Future<String> gerarFutureList() async {
+    var getHash = await GeradorListas().gerarListas();
     return getHash;
+  }
+
+  /*CONECT TO WS*/
+  conectWS(String data) async {
+    return ConectWebServer().setConection(data);
   }
 }

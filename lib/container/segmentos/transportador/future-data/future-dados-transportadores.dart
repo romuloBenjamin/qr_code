@@ -10,7 +10,7 @@ class FutureDataTransportadores {
   /*FUTURE DATA*/
   getFutureDataTransportadores(String busca) {
     return FutureBuilder(
-      future: GeradorListas().gerarFutureList(""),
+      future: GeradorListas().gerarFutureList(),
       initialData: GeradorListas().gerarEmptyList(),
       builder: (BuildContext context, AsyncSnapshot<Object> snapshot) {
         var jdata = jsonDecode(snapshot.data.toString());

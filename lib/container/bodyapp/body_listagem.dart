@@ -52,7 +52,8 @@ class _BodyListagemTransp extends State<ListagemTransp> {
           ),
           Flexible(
             child: FutureBuilder(
-              future: GeradorListas().gerarFutureList("search-intranet"),
+              //"search-intranet"
+              future: GeradorListas().gerarFutureList(),
               initialData: GeradorListas().gerarEmptyList(),
               builder: (BuildContext context, AsyncSnapshot<Object> snapshot) {
                 var jdata = jsonDecode(snapshot.data.toString());
