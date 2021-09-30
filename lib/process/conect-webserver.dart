@@ -11,7 +11,12 @@ class ConectWebServer {
       },
     );
 
-    print(response.body);
-    return "{testando}";
+    /*ERRO 500*/
+    if (response.statusCode == 500)
+      return "{\"status\":\"0\", \"msn\":\"Desculpe, não foi possível conectar com o WebServer!\"}";
+    /*OUTROS ERRO*/
+    if (response.statusCode != 200)
+      return "{\"status\":\"0\", \"msn\":\"Desculpe, não foi possível conectar com o WebServer!\"}";
+    if (response.statusCode == 200) return response.body;
   }
 }

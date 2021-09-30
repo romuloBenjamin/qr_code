@@ -6,6 +6,7 @@ class GeradorListas {
   String sendData = "";
   var json = {};
 
+  /*PREPARA DADOS PARA CONEXAO*/
   gerarListas() async {
     final stores = await SharedPreferences.getInstance();
     String? search = stores.getString("search");
@@ -29,6 +30,12 @@ class GeradorListas {
     return GeradorListas().conectWS(sendData);
   }
 
+  /*CONECT TO WS*/
+  conectWS(String data) async {
+    return ConectWebServer().setConection(data);
+  }
+
+  /*GERAR INI DATA*/
   gerarEmptyList() {
     var listaEmpty = '{"status": "0", "data": [], "msn": "Gerando dados..."}';
     return listaEmpty;
@@ -38,10 +45,5 @@ class GeradorListas {
   Future<String> gerarFutureList() async {
     var getHash = await GeradorListas().gerarListas();
     return getHash;
-  }
-
-  /*CONECT TO WS*/
-  conectWS(String data) async {
-    return ConectWebServer().setConection(data);
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:qr_code/container/segmentos/formularios/login/formulario-login.dart';
@@ -81,13 +83,40 @@ class _BodyAPPState extends State<Body_login> {
                       fit: FlexFit.loose,
                       child: ElevatedButton(
                         onPressed: () async {
+                          /*CLOSE TECLADO*/
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                          /*CHAMA DADOS DE SESSAO*/
                           final stores = await SharedPreferences.getInstance();
                           var dadosLogin =
                               "{\"usuario\":\"${stores.getString("users").toString()}\", \"senha\":\"${stores.getString("password").toString()}\",\"gates\":\"${portao.toString()}\"}";
                           stores.setString("search", dadosLogin);
                           stores.setString("swit", "logar-webserver");
+                          /*INICIA CONEXAO & DADOS*/
                           String validarUsuario =
                               await GeradorListas().gerarListas();
+                          var jdata = jsonDecode(validarUsuario);
+                          /*FALHA NA CONEXAO*/
+                          if (int.parse(jdata["status"]) == 0)
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(seconds: 3),
+                                content: Text(jdata["msn"]),
+                              ),
+                            );
+                          /*CONEXAO REALIZADA COM SUCESSO*/
+                          if (int.parse(jdata["status"]) == 1) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(seconds: 2),
+                                content: Text(
+                                  jdata["msn"],
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                            Navigator.of(context)
+                                .pushReplacementNamed("/mainpage");
+                          }
                         },
                         child: Text("Logar".toUpperCase()),
                       ),
