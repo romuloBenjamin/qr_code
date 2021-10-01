@@ -27,14 +27,29 @@ class _ListarAgregadosPage extends State<ListarAgregados> {
         title: Text("LISTAR TRANSPORTADORES"),
       ),
       body: Container(
-        padding: const EdgeInsets.all(5),
-        margin: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color.fromRGBO(220, 220, 220, 1),
+          ),
+          color: Color.fromRGBO(240, 240, 240, 1),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        margin: EdgeInsets.all(5),
         height: double.infinity,
         width: double.infinity,
         child: Column(
-          children: const <Widget>[
-            HeaderAPPS(),
-            ListagemTransp(),
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Flexible(
+              fit: FlexFit.loose,
+              child: HeaderAPPS(),
+            ),
+            Flexible(
+              flex: 4,
+              fit: FlexFit.loose,
+              child: ListagemTransp(),
+            ),
           ],
         ),
       ),

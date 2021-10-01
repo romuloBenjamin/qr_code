@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code/container/bodyapp/body_transportadores.dart';
-import 'package:qr_code/container/headers/header_box.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:qr_code/container/headers/header_box.dart';
 
 class Transportadores extends StatefulWidget {
   const Transportadores({Key? key}) : super(key: key);
@@ -37,7 +36,6 @@ class _MainTransportadores extends State<Transportadores> {
         child: Column(
           children: const <Widget>[
             HeaderAPPS(),
-            BodyTransportadores(),
           ],
         ),
       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'main_page.dart';
 import 'login_page.dart';
 import 'listar_agregados.dart';
-import 'page_transportadores.dart';
 
 //MAIN WID PART
 class QRCode extends StatelessWidget {
@@ -15,7 +14,6 @@ class QRCode extends StatelessWidget {
         "/": (context) => const LoginPage(),
         "/mainpage": (context) => const MainPage(),
         "/listarAgregados": (context) => const ListarAgregados(),
-        "/transportadores": (context) => const Transportadores(),
       },
     );
   }

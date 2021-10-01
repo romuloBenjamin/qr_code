@@ -61,6 +61,7 @@ class FormularioMain {
                             String dadosTransps =
                                 await GeradorListas().gerarListas();
                             var jdata = jsonDecode(dadosTransps.toString());
+                            print(jdata);
                             if (int.parse(jdata["status"]) == 0) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -70,6 +71,8 @@ class FormularioMain {
                               );
                             }
                             if (int.parse(jdata["status"]) == 1) {
+                              prefs.setString(
+                                  "dadosINI", jsonEncode(jdata).toString());
                               Navigator.of(context)
                                   .pushReplacementNamed("/listarAgregados");
                               ScaffoldMessenger.of(context).showSnackBar(
